@@ -47,7 +47,7 @@ get_ranked_variables <- function(player_code, edition) {
       return(variables)
     },
     error = function(e) {
-      message("Error for player ", player_name, ": ", e$message)
+      message("Error for player ", player, ": ", e$message)
       return(list(NA_real_, NA_real_, NA_real_, NA_real_))
     }
   )

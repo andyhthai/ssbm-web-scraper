@@ -32,7 +32,7 @@ get_major_variables <- function(player_code, edition) {
       return(major_variables)
     },
     error = function(e) {
-      message("Error for", player_name, ": ", e$message)
+      message("Error for", player, ": ", e$message)
       return(list(NA_real_, NA_real_, NA_real_, NA_real_))
     }
   )

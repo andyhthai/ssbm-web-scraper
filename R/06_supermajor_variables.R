@@ -62,7 +62,7 @@ get_supermajor_variables <- function(player_code, edition, list_edition) {
       return(supermajor_variables)
     },
     error = function(e) {
-      cat("Error for ", player_name, ": ", e$message)
+      cat("Error for ", player, ": ", e$message)
       return(list(NA_real_, NA_real_, NA_real_, NA_real_))
     }
   )

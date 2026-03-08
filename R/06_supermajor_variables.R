@@ -21,7 +21,11 @@ supermajor2023 <- paste(supermajor2023, collapse = "|")
 supermajor2024 <- c("GENESIS X", "Get On My Level X", "Tipped Off 15", "Don't Park on the Grass 2024")
 supermajor2024 <- paste(supermajor2024, collapse = "|")
 
-supermajors <- as.list(c(supermajor2016, supermajor2017, supermajor2018, supermajor2019, supermajor2022, supermajor2023, supermajor2024))
+supermajor2025 <- c("GENESIS X2", "Tipped Off f16: Safari", "Get On My Level: Forever", "Supernova 2025", "Collision 2025")
+supermajor2025 <- paste(supermajor2025, collapse = "|")
+
+
+supermajors <- as.list(c(supermajor2016, supermajor2017, supermajor2018, supermajor2019, supermajor2022, supermajor2023, supermajor2024, supermajor2025))
 
 illegal <- c("Sound", "Pre", "Ladder", "Local", "Rollers", "Reevo", "Lot", "Warm", "Showdown", "Guildhouse", "LCQ", "Amateur", "Foundry")
 illegal <- paste(illegal, collapse = "|")
@@ -38,6 +42,14 @@ get_supermajor_variables <- function(player_code, edition, list_edition) {
       page_source <- read_html(firefox$getPageSource() |> unlist())
 
       tournaments <- page_source |> html_elements(".w-full.p-1\\.5:not(.hidden)")
+
+      if (length(tournaments) == 0) {
+        message("0 supermajors attended or page not fully loaded, trying again")
+        Sys.sleep(5)
+        page_source <- read_html(firefox$getPageSource() |> unlist())
+
+        tournaments <- page_source |> html_elements(".w-full.p-1\\.5:not(.hidden)")
+      }
 
       tournament_names <- tournaments |> html_text2()
 
@@ -67,6 +79,7 @@ get_supermajor_variables <- function(player_code, edition, list_edition) {
     }
   )
 }
+
 
 all_supermajor_variables <- function(player_group) {
   tryCatch(

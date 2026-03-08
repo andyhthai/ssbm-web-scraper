@@ -1,9 +1,7 @@
 # vs previous-year ranked -------------------------------------------------
 
 # get_lastyear requires
-table2015 <- get_table(3)
-
-table2015$year <- 2015
+table2015 <- get_table("2015")
 
 temp_tables <- rbindlist(list(table2015, table2016, table2017, table2018, table2019, table2022, table2023, table2024))
 
@@ -76,6 +74,19 @@ get_lastyear <- function(player_code, edition) {
         html_elements("a") |>
         html_text2() |>
         tibble()
+
+      if (nrow(opponents) == 0) {
+        message("Page not fully loaded, trying again")
+        Sys.sleep(5)
+
+        page_source <- read_html(firefox$getPageSource() |> unlist())
+
+        opponents <- page_source |>
+          html_elements(".bg-gradient-to-r") |>
+          html_elements("a") |>
+          html_text2() |>
+          tibble()
+      }
 
       names(opponents) <- "startgg"
       opponents <- opponents |> filter(grepl(playerslist, startgg))

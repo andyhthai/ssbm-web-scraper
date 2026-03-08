@@ -30,8 +30,9 @@ checker <- function(df) {
               # Find and click the icon for melee
               melee_icon <- firefox$findElement(using = "css selector", ".object-center")
               melee_icon$clickElement()
-              Sys.sleep(3)
+              Sys.sleep(6)
 
+              # Click the nth player result
               result_css <- paste0("div.md\\:min-w-\\[400px\\]:nth-child(", n, ")")
               test_result <- firefox$findElement(using = "css selector", result_css)
               test_result$clickElement()
@@ -43,7 +44,7 @@ checker <- function(df) {
                 read_html()
 
               ranked <- player_source |>
-                html_element("span.font-inter:nth-child(1)") |>
+                html_elements(".font-bold.text-xs") |>
                 html_text2()
 
               # Check to see if it's the correct player name
@@ -51,7 +52,7 @@ checker <- function(df) {
                 html_elements(".text-center.z-10") |>
                 html_text2()
 
-              if (ranked == "Rankings" & any(grepl(tolower(df$startgg[i]), tolower(true_name), fixed = TRUE))) {
+              if (any(grepl("Rankings", ranked, fixed = TRUE)) & any(grepl(tolower(df$startgg[i]), tolower(true_name), fixed = TRUE))) {
                 cat("Found player at result", n, "\n")
                 TRUE
               } else {
@@ -68,6 +69,9 @@ checker <- function(df) {
             valid_player <- TRUE
             code <- firefox$getCurrentUrl() |> unlist()
             break
+          }
+          if (!valid_player) {
+            code <- NA_real_
           }
         }
 
@@ -172,7 +176,8 @@ ssbmtables <- ssbmtables |> mutate(list_edition = case_match(
   2019 ~ 4,
   2022 ~ 5,
   2023 ~ 6,
-  2024 ~ 7
+  2024 ~ 7,
+  2025 ~ 8
 ))
 
 # Some more data cleaning which will matter when grabbing variables for 2016

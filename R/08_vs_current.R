@@ -7,7 +7,7 @@ get_ranked_variables <- function(player_code, edition) {
       firefox$navigate(paste0(player_code, "&tab=events&offline&t=", edition, "&expand=true&t100"))
 
       # add this give the browser enough time to load
-      Sys.sleep(8)
+      Sys.sleep(10)
 
       # We'll collect the html of the newly loaded page
       page_source <- read_html(firefox$getPageSource() |> unlist())

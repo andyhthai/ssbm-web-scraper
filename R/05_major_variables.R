@@ -1,7 +1,5 @@
 # majors ------------------------------------------------------------------
 
-
-
 get_major_variables <- function(player_code, edition) {
   tryCatch(
     {
@@ -16,8 +14,21 @@ get_major_variables <- function(player_code, edition) {
 
       filtered_tournaments <- tournaments[!grepl("Eggdog Invitational M\nMelee Singles\nAug 30-2", tournament_names, fixed = TRUE)]
 
-      # Get tournaments where placement is 1
       major_placings <- as.numeric(filtered_tournaments |> html_elements(".text-lg.md\\:text-2xl") |> html_text2())
+
+      if (length(major_placings) == 0) {
+        message("0 majors attended or page needs more time to load, trying again")
+        Sys.sleep(5)
+        page_source <- read_html(firefox$getPageSource() |> unlist())
+
+        tournaments <- page_source |> html_elements(".w-full.p-1\\.5:not(.hidden)")
+
+        tournament_names <- tournaments |> html_text2()
+
+        filtered_tournaments <- tournaments[!grepl("Eggdog Invitational M\nMelee Singles\nAug 30-2", tournament_names, fixed = TRUE)]
+
+        major_placings <- as.numeric(filtered_tournaments |> html_elements(".text-lg.md\\:text-2xl") |> html_text2())
+      }
 
       avg_major_placement <- mean(major_placings)
 
@@ -37,9 +48,6 @@ get_major_variables <- function(player_code, edition) {
     }
   )
 }
-
-# Test
-get_major_variables("https://www.supermajor.gg/melee/player/Zain?id=S6126", 2024)
 
 all_major_variables <- function(player_group) {
   tryCatch(
